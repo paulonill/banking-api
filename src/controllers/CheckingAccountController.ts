@@ -73,7 +73,7 @@ class CheckingAccountController {
         }
     }
 
-    verifyIfExist = async(req:Request, res:Response, next:NextFunction) => {
+    verifyIfExists = async(req:Request, res:Response, next:NextFunction) => {
         try {
             const id = req.params.id; 
 
