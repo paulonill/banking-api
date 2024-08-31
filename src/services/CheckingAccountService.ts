@@ -67,9 +67,6 @@ class CheckingAccountService {
             const checkingAccount = await prisma.checkingAccount.findUnique({
                 where: {id}
             });
-            if(!checkingAccount) {
-                throw new Error("CheckingAccount not found;");
-            }
             return checkingAccount;
         } catch (error) {
             console.error(`Error fetching checkingAccount. ${error}`);
