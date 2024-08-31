@@ -24,6 +24,8 @@ routes.post(`${path}/:id/deposit`, checkingAccountController.verifyIfExists, sta
 
 routes.get(`${path}/:id/statement`, checkingAccountController.verifyIfExists, statementController.getStatement);
 
+routes.get(`${path}/:id/balance`, checkingAccountController.verifyIfExists, statementController.getBalance);
+
 routes.post(`${path}/:id/withdraw`, checkingAccountController.verifyIfExists, statementController.withdraw);
 
 export { routes }
