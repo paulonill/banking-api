@@ -30,4 +30,8 @@ routes.post(`${path}/:id/withdraw`, checkingAccountController.verifyIfExists, st
 
 routes.get(`${path}/:id/statement/period`, checkingAccountController.verifyIfExists, statementController.getByPeriod);
 
+routes.post(`${path}/:id/pix`, checkingAccountController.verifyIfExists, statementController.pix);
+
+routes.post(`${path}/:id/ted`, checkingAccountController.verifyIfExists, statementController.ted);
+
 export { routes }

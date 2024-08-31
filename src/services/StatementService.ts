@@ -104,11 +104,21 @@ class StatementService {
 
     async pix(idCheckingAccount:string, amount:number, description:string) {
         try {
-           const pix = this.createDebit(idCheckingAccount, amount, `PIX - ${description}`);
+           const pix = await this.createDebit(idCheckingAccount, amount, `PIX - ${description}`);
            return pix;
         } catch (error) {
             console.error(`Error creating pix. ${error}`);
             throw error; 
+        }
+    }
+
+    async ted(idCheckingAccount: string, amount: number, description: string) {
+        try {
+            const ted = await this.createDebit(idCheckingAccount, amount, `TED - ${description}`);
+            return ted;
+        } catch (error) {
+            console.error(`Error creating ted. ${error}`);
+            throw error;
         }
     }
 

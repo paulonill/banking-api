@@ -68,7 +68,6 @@ class StatementController {
         }
     }
 
-    // checkingaccounts/121321321321?startdate='2024-01-01'&enddate='2024-08-31'
     getByPeriod = async(req:Request, res:Response) => {
         try {
             const idCheckingAccount = req.params.id;
@@ -86,6 +85,38 @@ class StatementController {
             return res.status(200).json(statement);
         } catch (error) {
             this.handleError(res, error, "Error fetching statement by period.");
+        }
+    }
+
+    pix = async(req:Request, res:Response) => {
+        try {
+            const idCheckingAccount = req.params.id;
+            const {amount, description} = req.body;
+
+            const validation = this.isValidAmountAndDescripiton(amount, description);
+            if (!validation.isValid) {
+                return res.status(400).json({error: validation.msg});
+            }
+            const pix = await this.statementService.pix(idCheckingAccount, amount, description);
+            return res.status(201).json(pix);
+        } catch (error) {
+            this.handleError(res, error, "Error creating pix.");
+        }
+    }
+
+    ted = async(req:Request, res:Response) => {
+        try {
+            const idCheckingAccount = req.params.id;
+            const { amount, description } = req.body;
+
+            const validation = this.isValidAmountAndDescripiton(amount, description);
+            if(!validation.isValid) {
+                return res.status(400).json({error: validation.msg});
+            }
+            const ted = await this.statementService.ted(idCheckingAccount,amount,description);
+            return res.status(201).json(ted);
+        } catch (error) {
+            this.handleError(res, error, "Error creating ted.")
         }
     }
 
