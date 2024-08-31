@@ -14,21 +14,18 @@ class StatementController {
             const idCheckingAccount = req.params.id;
             const { amount, description } = req.body;
 
-            if (!amount || !description) {
-                return res.status(400).json({error: "Invalid amount or description."});
+            //this.isValidAmountAndDescripiton2(amount, description, res);
+
+            const validation = this.isValidAmountAndDescripiton(amount, description);
+            if(!validation.isValid) {
+                return res.status(400).json({ error: validation.msg });
             }
 
             const statement = 
                 await this.statementService.deposit(idCheckingAccount, amount, description);
             return res.status(201).json(statement);
         } catch (error) {
-            if (error instanceof Error) {
-                console.error(`Error creating deposit ${error}`);
-                return res.status(400).json({error: error.message});
-            } else {
-                console.error(`Unexpected error ${error}`);
-                return res.status(500).json({error: "An unexpected error ocurred."});
-            }
+            this.handleError(res, error, "Error creating deposit.");
         }
     }
 
@@ -38,13 +35,7 @@ class StatementController {
             const statement = await this.statementService.getAll(idCheckingAccount);
             return res.status(200).json(statement);
         } catch (error) {
-            if (error instanceof Error) {
-                console.error(`Error fetching statment ${error.message}`);
-                return res.status(400).json({error: error.message});
-            } else {
-                console.error(`Unexpected error ${error}`);
-                return res.status(500).json({error: "An unexpected error ocurred."});
-            }
+            this.handleError(res, error, "Error fetching statment.");
         }
     }
 
@@ -54,13 +45,7 @@ class StatementController {
             const balance = await this.statementService.getBalance(idCheckingAccount);
             return res.status(200).json({ balance });
         } catch (error) {
-            if(error instanceof Error) {
-                console.error(`Error fetching balance. ${error.message}`);
-                return res.status(400).json({error: "Error fetching balance."});
-            } else {
-                console.error(`Unexpected error ${error}`);
-                res.status(500).json({error: "An unexpected error ocurred."});
-            }
+            this.handleError(res, error, "Error fetching balance.");
         }
     }
 
@@ -69,24 +54,22 @@ class StatementController {
             const idCheckingAccount = req.params.id;
             const { amount, description } = req.body;
 
-            if(!amount || !description) {
-                return res.status(400).json({error: "Invalid amount or description."});
+            //this.isValidAmountAndDescripiton2(amount, description, res);
+
+            const validation = this.isValidAmountAndDescripiton(amount, description);
+            if(!validation.isValid) {
+                return res.status(400).json({ error: validation.msg });
             }
+            
             const withdraw = await this.statementService.withdraw(idCheckingAccount, amount, description);
             return res.status(201).json(withdraw);
         } catch (error) {
-            if (error instanceof Error) {
-                console.error(`Error creating withdraw. ${error}`);
-                return res.status(400).json({error: `Error creating withdraw. ${error.message}`});
-            } else {
-                console.error(`Unexpected error ${error}`);
-                return res.status(500).json({error: "An unexpected error ocurred"});
-            }
+            this.handleError(res, error, "Error creating withdraw.");
         }
     }
 
     // checkingaccounts/121321321321?startdate='2024-01-01'&enddate='2024-08-31'
-    getByPrtiod = async(req:Request, res:Response) => {
+    getByPeriod = async(req:Request, res:Response) => {
         try {
             const idCheckingAccount = req.params.id;
             const { startDate, endDate } = req.query;
@@ -102,7 +85,36 @@ class StatementController {
             const statement = await this.statementService.getByPeriod(idCheckingAccount, start, end);
             return res.status(200).json(statement);
         } catch (error) {
-            
+            this.handleError(res, error, "Error fetching statement by period.");
+        }
+    }
+
+    private isValidAmountAndDescripiton(amount: any, description: any) {
+        if (typeof amount !== "number" || amount <= 0) {
+            return {isValid: false, msg: "Invalid amount: must be a positive number."}
+        }
+        if (typeof description !== "string" || description.trim().length == 0) {
+            return {isValid: false, msg: "Invalid descripiton: must be a non empty string."}
+        }
+        return { isValid: true }
+    }
+
+    private isValidAmountAndDescripiton2(amount: any, description: any, res: Response) {
+        if (typeof amount !== "number" || amount <= 0) {
+            return res.status(400).json({error: "Invalid amount: must be a positive number."});
+        }
+        if (typeof description !== "string" || description.trim().length == 0) {
+            return res.status(400).json({error: "Invalid descripiton: must be a non empty string."});
+        }
+    }
+
+    private handleError(res:Response, error:unknown, msg: string) {
+        if (error instanceof Error) {
+            console.error(`${msg}. ${error.message}`);
+            return res.status(400).json({error: error.message});
+        } else {
+            console.error(`Unexpected error: ${error}`);
+            return res.status(500).json({error: "An unexpected error occurred."});
         }
     }
     

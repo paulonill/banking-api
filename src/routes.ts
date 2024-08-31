@@ -28,4 +28,6 @@ routes.get(`${path}/:id/balance`, checkingAccountController.verifyIfExists, stat
 
 routes.post(`${path}/:id/withdraw`, checkingAccountController.verifyIfExists, statementController.withdraw);
 
+routes.get(`${path}/:id/statement/period`, checkingAccountController.verifyIfExists, statementController.getByPeriod);
+
 export { routes }

@@ -41,25 +41,8 @@ class StatementService {
 
     async withdraw(idCheckingAccount:string, amount:number, description:string) {
         try {
-            if(amount <=0) {
-                throw new Error("Invalid amount.");
-            }
-
-            const balance = await this.getBalance(idCheckingAccount);
-
-            if(amount > balance) {
-                throw new Error("Insufficient funds.");
-            }
-
-            const statement = await prisma.statement.create({
-                data: {
-                    idCheckingAccount,
-                    amount: amount *-1,
-                    description,
-                    type: "debit"
-                }
-            });
-            return statement;
+           const withdraw = await this.createDebit(idCheckingAccount, amount, description);
+           return withdraw;
         } catch (error) {
             console.error(`Error creating withdraw. ${error}`);
             throw error;
@@ -115,6 +98,43 @@ class StatementService {
             return statement;
         } catch (error) {
             console.error(`Error fetching statement. ${error}`);
+            throw error;
+        }
+    }
+
+    async pix(idCheckingAccount:string, amount:number, description:string) {
+        try {
+           const pix = this.createDebit(idCheckingAccount, amount, `PIX - ${description}`);
+           return pix;
+        } catch (error) {
+            console.error(`Error creating pix. ${error}`);
+            throw error; 
+        }
+    }
+
+    private async createDebit(idCheckingAccount:string, amount:number, description:string) {
+        try {
+            if(amount <=0) {
+                throw new Error("Invalid amount.");
+            }
+
+            const balance = await this.getBalance(idCheckingAccount);
+
+            if(amount > balance) {
+                throw new Error("Insufficient funds.");
+            }
+
+            const statement = await prisma.statement.create({
+                data: {
+                    idCheckingAccount,
+                    amount: amount *-1,
+                    description,
+                    type: "debit"
+                }
+            });
+            return statement;
+        } catch (error) {
+            console.error(`Error creating withdraw. ${error}`);
             throw error;
         }
     }
