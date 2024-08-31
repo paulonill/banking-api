@@ -10,9 +10,9 @@ const statementController = new StatementController();
 
 const path = "/checkingaccounts";
 
-routes.get(path, checkingAccountController.findAll);
+routes.get(path, checkingAccountController.getAll);
 
-routes.get(`${path}/:id`, checkingAccountController.findById);
+routes.get(`${path}/:id`, checkingAccountController.getById);
 
 routes.post(path, checkingAccountController.create);
 
