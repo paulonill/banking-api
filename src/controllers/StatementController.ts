@@ -47,6 +47,7 @@ class StatementController {
             if(amount <= 0) {
                 return res.status(400).json({msg: "Invalid amount."});
             }
+  
             const statement = await prisma.statement.create({
                 data: {
                     idCheckingAccount,
