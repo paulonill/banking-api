@@ -9,7 +9,7 @@ const authController = new AuthController();
 
 userRoutes.post(path, userController.create);
 
-userRoutes.get(path, userController.getAll);
+userRoutes.get(path, authController.authMiddleware, userController.getAll);
 
 userRoutes.get(`${path}/:id`, userController.getById);
 
