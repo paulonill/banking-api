@@ -11,11 +11,33 @@ class UserController {
 
     create = async(req:Request, res: Response) => {
         try {
-            const {name, email, password } = req.body
+            const { name, email, password } = req.body
             const user = await this.userService.create(name, email, password);
             return res.status(201).json(user);
         } catch (error) {
             this.handleError(res, error, "Error creating user.");
+        }
+    }
+
+    getAll = async(req: Request, res: Response) => {
+        try {
+            const users = await this.userService.getAll();
+            return res.status(200).json(users);
+        } catch (error) {
+            this.handleError(res, error, "Error fetching users.");
+        }
+    }
+
+    getById = async(req:Request, res:Response) => {
+        try {
+            const id = req.params.id;
+            const user = await this.userService.getById(id);
+            if(!user) {
+                return res.status(404).json({error: "User not found."});
+            }
+            return res.status(200).json(user);
+        } catch (error) {
+            this.handleError(res, error, "Error fetching user.");
         }
     }
 
