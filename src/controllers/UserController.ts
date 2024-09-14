@@ -1,4 +1,4 @@
-import { Request, Response } from "express";
+import { NextFunction, Request, Response } from "express";
 import { UserService } from "../services/UserService"
 
 class UserController {
@@ -38,6 +38,40 @@ class UserController {
             return res.status(200).json(user);
         } catch (error) {
             this.handleError(res, error, "Error fetching user.");
+        }
+    }
+
+    delete = async(req: Request, res: Response) => {
+        try {
+            const id = req.params.id;
+            await this.userService.delete(id);
+            return res.status(204).json();
+        } catch (error) {
+            this.handleError(res, error, "Error deleting user.");
+        }
+    }
+
+    update = async(req: Request, res: Response) => {
+        try {
+            const id = req.params.id;
+            const { name, email, password } = req.body;
+            const user = await this.userService.update(id, name, email, password);
+            return res.status(200).json(user);
+        } catch (error) {
+            this.handleError(res, error, "Error updating user.");
+        }
+    }
+
+    verifyIfExists = async(req:Request, res: Response, next: NextFunction) => {
+        try {
+            const id = req.params.id;
+            const user = await this.userService.getById(id);
+            if (!user) {
+                return res.status(404).json({error: "User not found."});
+            }
+            return next();
+        } catch (error) {
+            this.handleError(res, error, "Error verify if exists user.");
         }
     }
 
