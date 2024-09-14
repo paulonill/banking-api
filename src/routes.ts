@@ -1,7 +1,6 @@
 import { Router } from "express";
 import { CheckingAccountController } from "./controllers/CheckingAccountController";
 import { StatementController } from "./controllers/StatementController";
-import { verify } from "crypto";
 
 const routes = Router();
 
