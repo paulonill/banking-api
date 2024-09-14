@@ -7,15 +7,15 @@ const userController = new UserController();
 const path = "/users";
 const authController = new AuthController();
 
-userRoutes.post(path, userController.create);
+userRoutes.post(path, authController.authMiddleware, userController.create);
 
 userRoutes.get(path, authController.authMiddleware, userController.getAll);
 
-userRoutes.get(`${path}/:id`, userController.getById);
+userRoutes.get(`${path}/:id`, authController.authMiddleware, userController.getById);
 
-userRoutes.delete(`${path}/:id`, userController.verifyIfExists, userController.delete);
+userRoutes.delete(`${path}/:id`, authController.authMiddleware, userController.verifyIfExists, userController.delete);
 
-userRoutes.put(`${path}/:id`, userController.verifyIfExists, userController.update);
+userRoutes.put(`${path}/:id`, authController.authMiddleware, userController.verifyIfExists, userController.update);
 
 userRoutes.post("/auth", authController.authenticate);
 
