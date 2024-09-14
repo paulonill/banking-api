@@ -13,6 +13,8 @@ const path = "/checkingaccounts";
 
 routes.get(path, authController.authMiddleware, checkingAccountController.getAll);
 
+routes.get(`${path}/searchByName`, authController.authMiddleware, checkingAccountController.getByName);
+
 routes.get(`${path}/:id`, authController.authMiddleware, checkingAccountController.getById);
 
 routes.post(path, authController.authMiddleware, checkingAccountController.create);

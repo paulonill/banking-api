@@ -88,6 +88,17 @@ class CheckingAccountController {
         }
     }
 
+    getByName = async (req: Request, res: Response) => {
+        try {
+            const { name } = req.query;
+            const checkingAccount = await this.checkingAccountService.getByName(name as string);
+            console.log(`Name ${checkingAccount}`);
+            return res.status(200).json(checkingAccount);
+        } catch (error) {
+            this.handleError(res, error, "Error fecthing by name checkingAccount.");
+        }
+    }
+
     private isValidNameAndEmailAndNumber(name: any, email: any, number:any) {
         if(typeof name !== "string" || name.trim().length == 0) {
             return {isValid: false, msg: "Invalid name: must be a non empty string."}
