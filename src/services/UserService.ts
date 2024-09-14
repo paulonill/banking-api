@@ -19,6 +19,13 @@ class UserService {
                     name,
                     email,
                     password: hashPassword
+                }, select: {
+                    id: true,
+                    name: true,
+                    email: true,
+                    password: false,
+                    createdAt: true,
+                    updatedAt: true
                 }
             });
             return user;
@@ -30,7 +37,16 @@ class UserService {
 
     async getAll() {
         try {
-            const users = await prisma.user.findMany();
+            const users = await prisma.user.findMany({
+                select: {
+                    id: true,
+                    name: true,
+                    email: true,
+                    password: false,
+                    createdAt: true,
+                    updatedAt: true
+                }
+            });
             return users;
         } catch (error) {
             console.error(`Error fetching users. ${error}`);
@@ -43,6 +59,14 @@ class UserService {
             const user = await prisma.user.findUnique({
                 where: {
                     id
+                },
+                select: {
+                    id: true,
+                    name: true,
+                    email: true,
+                    password: false,
+                    createdAt: true,
+                    updatedAt: true
                 }
             });
             return user;
@@ -74,6 +98,14 @@ class UserService {
                     name,
                     email,
                     password: hashPassword
+                },
+                select: {
+                    id: true,
+                    name: true,
+                    email: true,
+                    password: false,
+                    createdAt: true,
+                    updatedAt: true
                 }
             });
             return user;

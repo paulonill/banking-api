@@ -31,6 +31,9 @@ class UserController {
     getById = async(req:Request, res:Response) => {
         try {
             const id = req.params.id;
+            if(!this.validateId(id)) {
+                return res.status(404).json({error: "User not found."});
+            }
             const user = await this.userService.getById(id);
             if(!user) {
                 return res.status(404).json({error: "User not found."});
@@ -65,6 +68,10 @@ class UserController {
     verifyIfExists = async(req:Request, res: Response, next: NextFunction) => {
         try {
             const id = req.params.id;
+            if(!this.validateId(id)) {
+                return res.status(404).json({error: "User not found."});
+            }
+
             const user = await this.userService.getById(id);
             if (!user) {
                 return res.status(404).json({error: "User not found."});
@@ -73,6 +80,10 @@ class UserController {
         } catch (error) {
             this.handleError(res, error, "Error verify if exists user.");
         }
+    }
+
+    private validateId(id: string) {
+        return id.length === 24;
     }
 
     private handleError(res:Response, error:unknown, msg: string) {
